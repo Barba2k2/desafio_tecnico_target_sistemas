@@ -99,6 +99,50 @@ dart format .
 - Public APIs should have documentation comments
 - Keep README.md updated with usage instructions
 
+## Security Guidelines
+
+This project follows secure coding practices aligned with OWASP recommendations.
+
+### Input Validation (OWASP A03)
+- **Never use null assertion (`!`)** on user input without validation
+- Use `int.tryParse()` instead of `int.parse()` for safe number parsing
+- Validate and sanitize all stdin input before processing
+- Handle EOF and null input gracefully
+
+### Defensive Programming Patterns
+```dart
+// Safe input reading pattern
+String? readInput() {
+  final input = stdin.readLineSync();
+  if (input == null || input.isEmpty) return null;
+  return input;
+}
+
+// Safe integer parsing pattern
+int? parseInput(String? input) {
+  if (input == null || input.trim().isEmpty) return null;
+  return int.tryParse(input.trim());
+}
+```
+
+### Error Handling
+- Use `stderr` for error messages (not `stdout`)
+- Return appropriate exit codes (`exit(1)` for errors)
+- Provide clear, user-friendly error messages
+- Never expose stack traces to end users
+
+### Boundary Validation
+- Validate numeric ranges (e.g., negative numbers for Fibonacci)
+- Consider integer overflow for large calculations
+- Set reasonable limits for string input lengths
+
+### Code Review Security Checklist
+- [ ] No null assertion (`!`) on external input
+- [ ] Input validation before processing
+- [ ] Error messages written to stderr
+- [ ] Appropriate exit codes for error conditions
+- [ ] Boundary conditions handled
+
 ## Testing Guidelines
 
 - Tests are located in the `test/` directory
@@ -126,6 +170,7 @@ dart format .
 - [ ] Tests pass (`dart test`)
 - [ ] Code is properly formatted (`dart format`)
 - [ ] No hardcoded values where configuration is appropriate
+- [ ] Input validation implemented (see Security Guidelines)
 
 ## Important Notes
 
